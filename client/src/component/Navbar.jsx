@@ -1,12 +1,15 @@
 import React,{useState} from 'react'
 import logo from "../assets/logo.png";
 import Modal from './LoginModal';
+import { Dropdown } from "flowbite-react";
+import { useAuth } from '../context/AuthContext';
+
 export const Navbar = () => {
 
   const [isCollapsed, setCollapsed] = useState(true);
   const [isModalOpen, setModalOpen] = useState(false);
   const [modalType, setModalType] = useState('signup');
-
+  const { isLoggedIn, profile, logOut, isAdmin } = useAuth();
   const toggleNavbar = () => {
     setCollapsed(!isCollapsed);
   };
@@ -23,6 +26,9 @@ export const Navbar = () => {
   const switchModalType = () => {
     setModalType((prevType) => (prevType === 'signup' ? 'login' : 'signup'));
   };
+  const handleLogout = () => {
+    logOut();
+};
   return (
    <>
    
@@ -35,17 +41,25 @@ export const Navbar = () => {
   </a>
   <div class="flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
    <div className='flex gap-4'>
+{
+  isLoggedIn?(
+    <Dropdown label="Dropdown" inline>
+      <Dropdown.Item>{profile.name}</Dropdown.Item>
+    
+      <Dropdown.Item onClick={handleLogout}>Sign out</Dropdown.Item>
+    </Dropdown>
+  ):(<div>
 
-<div>
+    <button onClick={() => openModal('signup')}>
+      {/* Signup Icon */}
+      <svg width={28} height={28} viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M23.3333 14V8.16669H25.6666V15.1667H23.3333M23.3333 19.8334H25.6666V17.5H23.3333M11.6666 15.1667C14.7816 15.1667 21 16.73 21 19.8334V23.3334H2.33331V19.8334C2.33331 16.73 8.55165 15.1667 11.6666 15.1667ZM11.6666 4.66669C12.9043 4.66669 14.0913 5.15835 14.9665 6.03352C15.8416 6.90869 16.3333 8.09568 16.3333 9.33335C16.3333 10.571 15.8416 11.758 14.9665 12.6332C14.0913 13.5084 12.9043 14 11.6666 14C10.429 14 9.24198 13.5084 8.36682 12.6332C7.49164 11.758 6.99998 10.571 6.99998 9.33335C6.99998 8.09568 7.49164 6.90869 8.36682 6.03352C9.24198 5.15835 10.429 4.66669 11.6666 4.66669ZM11.6666 17.3834C8.20165 17.3834 4.54998 19.0867 4.54998 19.8334V21.1167H18.7833V19.8334C18.7833 19.0867 15.1316 17.3834 11.6666 17.3834ZM11.6666 6.88335C11.0169 6.88335 10.3944 7.1381 9.92438 7.60819C9.45429 8.07828 9.19998 8.70076 9.19998 9.35002C9.19998 9.99928 9.45429 10.6218 9.92438 11.0919C10.3944 11.5619 11.0169 11.8167 11.6666 11.8167C12.3159 11.8167 12.9384 11.5619 13.4085 11.0919C13.8786 10.6218 14.1333 9.99928 14.1333 9.35002C14.1333 8.70076 13.8786 8.07828 13.4085 7.60819C12.9384 7.1381 12.3159 6.88335 11.6666 6.88335Z" fill="currentColor" />
+      </svg>
+    </button>
+  
+</div>)
+}
 
-              <button onClick={() => openModal('signup')}>
-                {/* Signup Icon */}
-                <svg width={28} height={28} viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M23.3333 14V8.16669H25.6666V15.1667H23.3333M23.3333 19.8334H25.6666V17.5H23.3333M11.6666 15.1667C14.7816 15.1667 21 16.73 21 19.8334V23.3334H2.33331V19.8334C2.33331 16.73 8.55165 15.1667 11.6666 15.1667ZM11.6666 4.66669C12.9043 4.66669 14.0913 5.15835 14.9665 6.03352C15.8416 6.90869 16.3333 8.09568 16.3333 9.33335C16.3333 10.571 15.8416 11.758 14.9665 12.6332C14.0913 13.5084 12.9043 14 11.6666 14C10.429 14 9.24198 13.5084 8.36682 12.6332C7.49164 11.758 6.99998 10.571 6.99998 9.33335C6.99998 8.09568 7.49164 6.90869 8.36682 6.03352C9.24198 5.15835 10.429 4.66669 11.6666 4.66669ZM11.6666 17.3834C8.20165 17.3834 4.54998 19.0867 4.54998 19.8334V21.1167H18.7833V19.8334C18.7833 19.0867 15.1316 17.3834 11.6666 17.3834ZM11.6666 6.88335C11.0169 6.88335 10.3944 7.1381 9.92438 7.60819C9.45429 8.07828 9.19998 8.70076 9.19998 9.35002C9.19998 9.99928 9.45429 10.6218 9.92438 11.0919C10.3944 11.5619 11.0169 11.8167 11.6666 11.8167C12.3159 11.8167 12.9384 11.5619 13.4085 11.0919C13.8786 10.6218 14.1333 9.99928 14.1333 9.35002C14.1333 8.70076 13.8786 8.07828 13.4085 7.60819C12.9384 7.1381 12.3159 6.88335 11.6666 6.88335Z" fill="currentColor" />
-                </svg>
-              </button>
-            
-      </div>
       <div>
 
       

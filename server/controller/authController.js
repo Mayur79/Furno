@@ -112,4 +112,59 @@ const loginController = async (req, res) => {
     res.status(500).json({ success: false, message: "Error in login.", error });
   }
 };
-module.exports = { registerController, loginController };
+
+const googleregisterController = async (req, res) => {
+  const { profile } = req.body;
+  if (!profile) {
+    return res.status(400).json({ error: "Profile data is required." });
+  }
+
+  // Create a new user document and save it to the database
+  const newUser = new User({
+    name: profile.name,
+    email: profile.email,
+    // Add other relevant properties from the `profile` object
+  });
+
+  newUser
+    .save()
+    .then((user) => {
+      res.json({ success: true, user });
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).json({ error: "Failed to store user data." });
+    });
+};
+
+const googleLoginController = async (req, res) => {
+  const { profile } = req.body;
+  if (!profile) {
+    return res.status(400).json({ error: "Profile data is required." });
+  }
+
+  User.findOne({ email: profile.email })
+    .then((user) => {
+      if (user) {
+        console.log("User login successfully");
+        const token = JWT.sign({ _id: user._id }, process.env.JWT_SECRET_KEY, {
+          expiresIn: "7d",
+        });
+        res.json({ success: true, user, token });
+      } else {
+        // User does not exist, send an error response
+        res.status(404).json({ error: "User not found." });
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).json({ error: "Failed to find user." });
+    });
+};
+
+module.exports = {
+  registerController,
+  loginController,
+  googleregisterController,
+  googleLoginController,
+};

@@ -1,7 +1,10 @@
 import React, { useRef, useEffect,useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
+import { googleLogout, useGoogleLogin } from '@react-oauth/google';
+import { useAuth } from '../context/AuthContext';
 const Modal = ({ type, onClose, onSwitch }) => {
 
   const [name, setName] = useState('');
@@ -10,7 +13,8 @@ const Modal = ({ type, onClose, onSwitch }) => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const navigate = useNavigate();
   const modalRef = useRef();
-
+  const { logIn } = useAuth();
+  const [user, setUser] = useState([]);
   const handleSwitchClick = (e) => {
     e.preventDefault();
     onSwitch();
@@ -54,6 +58,72 @@ const Modal = ({ type, onClose, onSwitch }) => {
         console.log(error);
     }
 };
+ 
+useEffect(() => {
+  if(type==='login'){
+  if (user) {
+      axios
+          .get(`https://www.googleapis.com/oauth2/v1/userinfo?access_token=${user.access_token}`, {
+              headers: {
+                  Authorization: `Bearer ${user.access_token}`,
+                  Accept: 'application/json',
+              },
+          })
+          .then((res) => {
+              axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/v1/auth/googleLogin`, { profile: res.data }).then((response) => {
+                  console.log('User register successfully', response.data);
+                  const token = response.data.token;
+                  logIn(response.data, token);
+                  localStorage.setItem('auth', JSON.stringify(response.data));
+                  window.location.reload();
+              });
+          })
+          .catch((err) => console.log(err));
+  }
+}
+}, [user]);
+const handleGoogleRegister = useGoogleLogin({
+  onSuccess: (codeResponse) => {
+      setUser(codeResponse);
+      toast.success("User registered successfully", {
+          autoClose: 1000,
+      });
+  },
+  onError: (error) => console.log('Login Failed:', error)
+});
+useEffect(() => {
+  if(type!='login'){
+
+ 
+  if (user) {
+      const res = axios
+          .get(`https://www.googleapis.com/oauth2/v1/userinfo?access_token=${user.access_token}`, {
+              headers: {
+                  Authorization: `Bearer ${user.access_token}`,
+                  Accept: 'application/json',
+              },
+          })
+          .then((res) => {
+              axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/v1/auth/storeUserData`, { profile: res.data }).then((response) => {
+                  console.log('User data stored successfully:', response.data);
+                  navigate('/about');
+                  window.location.reload();
+              });
+          })
+          .catch((err) => console.log(err));
+  }
+}
+}, [user]);
+
+
+const handleGoogleLogin = useGoogleLogin({
+  onSuccess: (codeResponse) => {
+      setUser(codeResponse);
+      toast.success("User login successfully");
+      logIn(codeResponse);
+  },
+  onError: (error) => console.log('Login Failed:', error)
+});
 
 
 const handleLogin = async (e) => {
@@ -64,20 +134,21 @@ const handleLogin = async (e) => {
       const res = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/v1/auth/login`, { email, password });
       
       if (res && res.data.success) {
-          const token = res.data.token;
-          // logIn(res.data, token);
-          // localStorage.setItem('auth', JSON.stringify(res.data));
+        const token = res.data.token;
+                logIn(res.data, token);
+                localStorage.setItem('auth', JSON.stringify(res.data));
+
 
           const endTime = new Date(); // Record end time
           const timeTaken = (endTime - startTime) / 1000; // Calculate time taken in seconds
 
           // Display success toast with time taken
           toast.success(`Login successful. Redirecting in ${timeTaken} seconds`, {
-              onClose: () => {
-                  // Reload the page after displaying the toast
-                  window.location.reload();
-              },
-          });
+            onClose: () => {
+                // Reload the page after displaying the toast
+                window.location.reload();
+            },
+        });
       } else {
           toast.error(res.data.message);
       }
@@ -222,6 +293,24 @@ const handleSubmit = (e) => {
               )}
             </p>
           </form>
+          {type==='login'?(
+            <div className='mt-4 flex items-center justify-center'>
+                            <button onClick={handleGoogleLogin} class="px-4 py-2 border flex gap-2 border-slate-200 dark:border-slate-700 rounded-lg text-grey-900 hover:border-slate-400 dark:hover:border-slate-500 hover:text-grey-950 font-bold hover:shadow transition duration-150">
+                                <img class="w-6 h-6" src="https://www.svgrepo.com/show/475656/google-color.svg" alt="google logo" />
+                                <span>SignIn with Google</span>
+                            </button>
+                        </div>
+          ):(
+            <div className='mt-2 flex items-center justify-center'>
+
+
+            <button onClick={handleGoogleRegister} class="px-4 py-2 border flex gap-2 border-slate-200 dark:border-slate-700 rounded-lg text-slate-700 dark:text-slate-200 hover:border-slate-400 dark:hover:border-slate-500 hover:text-slate-900 dark:hover:text-slate-300 hover:shadow transition duration-150">
+                <img class="w-6 h-6" src="https://www.svgrepo.com/show/475656/google-color.svg" loading="lazy" alt="google logo" />
+                <span>SignUp with Google</span>
+            </button>
+        </div>
+          )}
+          
         </div>
       </div>
       <ToastContainer/>

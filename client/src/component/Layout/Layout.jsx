@@ -8,7 +8,7 @@ const Layout = () => {
   return (
     <div>
       <Navbar />
-      <div className=" mt-10 md:mt-[4.4rem]">
+      <div className="">
         <Outlet />
       </div>
     </div>
