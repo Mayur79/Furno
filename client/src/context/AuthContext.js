@@ -15,8 +15,8 @@ export const AuthProvider = ({ children }) => {
       setIsLoggedIn(true);
       setProfile(userData.user);
       setIsAuthenticated(true);
-      if (userData.user && userData.user.role) {
-        setIsAdmin(userData.user.role === 1); // Assuming role 1 indicates admin
+      if (userData.user && userData.user.admin) {
+        setIsAdmin(userData.user.admin === true); // Assuming admin 1 indicates admin
       }
     }
   }, []);
@@ -27,8 +27,9 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem("auth", JSON.stringify(userData));
     localStorage.setItem("jwtToken", token);
     setIsAuthenticated(true);
-    if (userData.user && userData.user.role) {
-      setIsAdmin(userData.user.role === 1); // Assuming role 1 indicates admin
+    if (userData.user && userData.user.admin) {
+      console.log("admin he kya", userData.user.admin);
+      setIsAdmin(userData.user.admin === true); // Assuming admin 1 indicates admin
     }
   };
 

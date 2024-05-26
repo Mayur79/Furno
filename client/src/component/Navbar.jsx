@@ -3,13 +3,15 @@ import logo from "../assets/logo.png";
 import Modal from './LoginModal';
 import { Dropdown } from "flowbite-react";
 import { useAuth } from '../context/AuthContext';
-
+import { useNavigate } from 'react-router-dom';
 export const Navbar = () => {
 
   const [isCollapsed, setCollapsed] = useState(true);
   const [isModalOpen, setModalOpen] = useState(false);
   const [modalType, setModalType] = useState('signup');
   const { isLoggedIn, profile, logOut, isAdmin } = useAuth();
+  const navigate = useNavigate();
+
   const toggleNavbar = () => {
     setCollapsed(!isCollapsed);
   };
@@ -29,6 +31,11 @@ export const Navbar = () => {
   const handleLogout = () => {
     logOut();
 };
+
+
+const handleAdminDashboardClick = () => {
+  navigate('/admin');
+};
   return (
    <>
    
@@ -43,8 +50,11 @@ export const Navbar = () => {
    <div className='flex gap-4'>
 {
   isLoggedIn?(
-    <Dropdown label="Dropdown" inline>
-      <Dropdown.Item>{profile.name}</Dropdown.Item>
+    <Dropdown label={profile && (profile.name)} inline className='z-50'>
+      <Dropdown.Item>{profile && (profile.name)}</Dropdown.Item>
+      {isAdmin?(  <Dropdown.Item>Admin</Dropdown.Item>):(  <Dropdown.Item>Not admin</Dropdown.Item>)}
+      <Dropdown.Item>Dashboard</Dropdown.Item>
+      <Dropdown.Item onClick={handleAdminDashboardClick}>Admin Dashboard</Dropdown.Item>
     
       <Dropdown.Item onClick={handleLogout}>Sign out</Dropdown.Item>
     </Dropdown>

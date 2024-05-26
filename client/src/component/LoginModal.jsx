@@ -138,7 +138,6 @@ const handleLogin = async (e) => {
                 logIn(res.data, token);
                 localStorage.setItem('auth', JSON.stringify(res.data));
 
-
           const endTime = new Date(); // Record end time
           const timeTaken = (endTime - startTime) / 1000; // Calculate time taken in seconds
 
