@@ -6,6 +6,7 @@ import HomePage from "./Pages/HomePage";
 import AboutPage from "./Pages/AboutPage";
 import AdminDashboard from "./Pages/Admin/AdminDashboard";
 import { useAuth } from "./context/AuthContext";
+import ProductPage from "./Pages/ProductPage";
 
 function App() {
   const { isLoggedIn, profile, logOut, isAdmin } = useAuth();
@@ -19,6 +20,7 @@ function App() {
             path="/admin"
             element={isAdmin ? <AdminDashboard /> : <HomePage />}
           />
+          <Route path="/allProduct" element={<ProductPage />} />
         </Route>
       </Routes>
     </div>
