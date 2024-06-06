@@ -8,6 +8,7 @@ import AdminDashboard from "./Pages/Admin/AdminDashboard";
 import { useAuth } from "./context/AuthContext";
 import ProductPage from "./Pages/ProductPage";
 import ProductDetail from "./Pages/ProductDetail";
+import CartPage from "./Pages/CartPage";
 
 function App() {
   const { isLoggedIn, profile, logOut, isAdmin } = useAuth();
@@ -23,6 +24,7 @@ function App() {
           />
           <Route path="/allProduct" element={<ProductPage />} />
           <Route path="/productDetail/:productId" element={<ProductDetail />} />
+          <Route path="/addToCart" element={<CartPage />} />
         </Route>
       </Routes>
     </div>

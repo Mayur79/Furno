@@ -51,6 +51,7 @@ const getSpecificProductController = async (req, res) => {
 };
 const addProductCartController = async (req, res) => {
   const { products, userId } = req.body;
+
   try {
     let cart = await cartModel.findOne({ userId });
     if (!cart) {
@@ -64,6 +65,15 @@ const addProductCartController = async (req, res) => {
   } catch (error) {
     res.status(500).send(error);
   }
+  const getProductCartController = async (req, res) => {
+    const { userId } = req.body;
+
+    try {
+      const cardproduct = await cartModel.findById({ userId });
+    } catch (error) {
+      res.status(500).send(error);
+    }
+  };
 };
 
 module.exports = {

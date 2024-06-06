@@ -4,6 +4,7 @@ import Modal from './LoginModal';
 import { Dropdown } from "flowbite-react";
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+
 export const Navbar = () => {
 
   const [isCollapsed, setCollapsed] = useState(true);
@@ -105,7 +106,7 @@ const handleAdminDashboardClick = () => {
         />
       </svg>
       </div>
-      <div>
+      <button onClick={()=>navigate("/addToCart")}>
 
      
       <svg
@@ -120,7 +121,7 @@ const handleAdminDashboardClick = () => {
           fill="black"
         />
       </svg>
-      </div>
+      </button>
    </div>
       
       <div class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600" id="user-dropdown">

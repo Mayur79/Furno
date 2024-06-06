@@ -14,12 +14,14 @@ const ProductDetail = () => {
   const [count, setCount] = useState(1);
   const [relatedProducts, setRelatedProducts] = useState([]);
   const auth = JSON.parse(localStorage.getItem("auth"));
-  const userId=auth._id;
+  const userId=auth.user._id;
   useEffect(() => {
     const fetchProduct = async () => {
       try {
         const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/v1/product/getSpecificProduct/${productId}`);
         setProduct(response.data);
+        console.log("Auth ",auth);
+        console.log("USrri ",userId)
       } catch (error) {
         console.error('Error fetching product:', error);
       }
@@ -29,6 +31,7 @@ const ProductDetail = () => {
       try {
         const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/v1/product/getProducts`);
         const filteredProducts = response.data.filter(product => product._id !== productId);
+        
         setRelatedProducts(filteredProducts);
       } catch (error) {
         console.error('Error fetching products:', error);
@@ -92,7 +95,7 @@ const ProductDetail = () => {
     try {
         const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/v1/product/addtoCart`, {
             products: [productToAdd],
-            userId,
+            userId:userId,
         });
         console.log('Product added to cart:', response.data);
     } catch (error) {
