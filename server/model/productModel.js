@@ -6,9 +6,11 @@ const productSchema = new mongoose.Schema({
   category: String,
   realprice: Number,
   description: String,
-  reviews: [String],
   photos: [String],
+  mainphotos: String,
   subheading: String,
+  reviews: Number,
+  totalreviews: Number,
 });
 
 module.exports = mongoose.model("Product", productSchema);

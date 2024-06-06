@@ -43,13 +43,13 @@ const ProductSection = () => {
         {products.map((product) => (
           <div key={product._id} className="relative border flex flex-col group">
             <div className="flex h-5/6">
-              {product.photos.length > 0 && (
+            
                 <img
-                  src={product.photos[0]}
+                  src={product.mainphotos}
                   alt={`Product ${product.name}`}
                   className="object-cover w-full transition-opacity duration-300 group-hover:opacity-50"
                 />
-              )}
+            
             </div>
             <div className="flex flex-col gap-1 h-2/6 bg-[#F4F5F7] p-5">
               <div>

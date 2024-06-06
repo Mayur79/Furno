@@ -7,6 +7,7 @@ import shop1 from "../assets/shop1.svg";
 import shop2 from "../assets/shop2.svg";
 import shop3 from "../assets/shop3.svg";
 import shop4 from "../assets/shop4.svg";
+import { useNavigate } from 'react-router-dom';
 
 const ProductPage = () => {
   const [products, setProducts] = useState([]);
@@ -14,6 +15,7 @@ const ProductPage = () => {
   const [totalPages, setTotalPages] = useState(0);
   const [selectedPriceFilter, setSelectedPriceFilter] = useState('');
   const productsPerPage = 16;
+  const navigate=useNavigate();
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -118,15 +120,15 @@ const ProductPage = () => {
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mx-auto my-16 px-4 md:px-0">
         {currentProducts.map((product) => (
-          <div key={product._id} className="relative border flex flex-col group">
+          <div key={product._id} className="relative border flex flex-col group" onClick={()=>navigate(`/productDetail/${product._id}`)}>
             <div className="flex h-5/6">
-              {product.photos.length > 0 && (
+             
                 <img
-                  src={product.photos[0]}
+                  src={product.mainphotos}
                   alt={`Product ${product.name}`}
                   className="object-cover w-full transition-opacity duration-300 group-hover:opacity-50"
                 />
-              )}
+             
             </div>
             <div className="flex flex-col gap-1 h-2/6 bg-[#F4F5F7] p-5">
               <div>

@@ -9,7 +9,8 @@ const AdminDashboard = () => {
     photos: [],
     realprice:'',
     description:'',
-    subheading:''
+    subheading:'',
+    mainphotos:''
   });
 
   const handleChange = (e) => {
@@ -36,6 +37,27 @@ const AdminDashboard = () => {
       reader.onerror = (error) => reject(error);
     });
   };
+
+  const handleMainPhotoChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      convertMainToBase64(file).then(base64Photo => {
+        setFormData({ ...formData, mainphotos: base64Photo });
+      }).catch(error => {
+        console.error("Error converting file to base64:", error);
+      });
+    }
+  };
+  
+  const convertMainToBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (error) => reject(error);
+    });
+  };
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -124,6 +146,17 @@ const AdminDashboard = () => {
             id="photos"
             multiple
             onChange={handlePhotoChange}
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          />
+        </div>
+        <div className="mb-4">
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="photos">Main Photos</label>
+          <input
+            type="file"
+            name="mainphotos"
+            id="mainphotos"
+            multiple
+            onChange={handleMainPhotoChange}
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           />
         </div>

@@ -7,11 +7,12 @@ import AboutPage from "./Pages/AboutPage";
 import AdminDashboard from "./Pages/Admin/AdminDashboard";
 import { useAuth } from "./context/AuthContext";
 import ProductPage from "./Pages/ProductPage";
+import ProductDetail from "./Pages/ProductDetail";
 
 function App() {
   const { isLoggedIn, profile, logOut, isAdmin } = useAuth();
   return (
-    <div>
+    <div className="font-poppins">
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<HomePage />} />
@@ -21,6 +22,7 @@ function App() {
             element={isAdmin ? <AdminDashboard /> : <HomePage />}
           />
           <Route path="/allProduct" element={<ProductPage />} />
+          <Route path="/productDetail/:productId" element={<ProductDetail />} />
         </Route>
       </Routes>
     </div>
