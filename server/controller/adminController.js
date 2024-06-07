@@ -51,7 +51,7 @@ const getSpecificProductController = async (req, res) => {
 };
 const addProductCartController = async (req, res) => {
   const { products, userId } = req.body;
-
+  console.log("req body cart", req.body);
   try {
     let cart = await cartModel.findOne({ userId });
     if (!cart) {
@@ -65,15 +65,32 @@ const addProductCartController = async (req, res) => {
   } catch (error) {
     res.status(500).send(error);
   }
-  const getProductCartController = async (req, res) => {
-    const { userId } = req.body;
+};
+const getProductCartController = async (req, res) => {
+  const { userId } = req.query;
 
-    try {
-      const cardproduct = await cartModel.findById({ userId });
-    } catch (error) {
-      res.status(500).send(error);
+  try {
+    const cart = await cartModel.findOne({ userId });
+    if (!cart) {
+      return res.status(404).json({ message: "Cart not found" });
     }
-  };
+
+    const productsWithDetails = await Promise.all(
+      cart.products.map(async (item) => {
+        const product = await productModel.findById(item.productId);
+
+        return {
+          productId: item.productId,
+          quantity: item.quantity,
+          productDetails: product,
+        };
+      })
+    );
+
+    res.status(200).json({ products: productsWithDetails });
+  } catch (error) {
+    res.status(500).send(error);
+  }
 };
 
 module.exports = {
@@ -81,4 +98,5 @@ module.exports = {
   getProductsController,
   getSpecificProductController,
   addProductCartController,
+  getProductCartController,
 };

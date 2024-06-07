@@ -89,7 +89,7 @@ const ProductDetail = () => {
   const addToCart = async () => {
    // Replace with actual user ID logic
     const productToAdd = {
-        productId: product.id,
+        productId: product._id,
         quantity: count,
     };
     try {

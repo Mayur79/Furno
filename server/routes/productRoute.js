@@ -3,6 +3,7 @@ const {
   getProductsController,
   getSpecificProductController,
   addProductCartController,
+  getProductCartController,
 } = require("../controller/adminController");
 const multer = require("multer");
 const router = require("express").Router();
@@ -19,4 +20,5 @@ router.post("/createProduct", createProductController);
 router.get("/getProducts", getProductsController);
 router.get("/getSpecificProduct/:productId", getSpecificProductController);
 router.post("/addtoCart", addProductCartController);
+router.get("/displayCartProduct", getProductCartController);
 module.exports = router;
