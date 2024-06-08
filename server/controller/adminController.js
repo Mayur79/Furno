@@ -1,4 +1,5 @@
 const cartModel = require("../model/cartModel");
+const Order = require("../model/orderModel");
 const productModel = require("../model/productModel");
 
 const createProductController = async (req, res) => {
@@ -92,6 +93,42 @@ const getProductCartController = async (req, res) => {
     res.status(500).send(error);
   }
 };
+const deleteProductCartController = async (req, res) => {
+  try {
+    const { productId, userId } = req.body;
+
+    // Find the cart for the user
+    const cart = await cartModel.findOne({ userId });
+
+    if (!cart) {
+      return res.status(404).json({ message: "Cart not found" });
+    }
+
+    // Remove the product from the cart
+    cart.products = cart.products.filter(
+      (product) => product.productId !== productId
+    );
+
+    // Save the updated cart
+    await cart.save();
+
+    res.json({ message: "Product removed from cart" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+const createOrderInDatabase = async ({ orderId, userId, amount, items }) => {
+  const order = new Order({
+    orderId,
+    userId,
+    amount,
+    items,
+  });
+  await order.save();
+  return order;
+};
 
 module.exports = {
   createProductController,
@@ -99,4 +136,6 @@ module.exports = {
   getSpecificProductController,
   addProductCartController,
   getProductCartController,
+  deleteProductCartController,
+  createOrderInDatabase,
 };
