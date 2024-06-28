@@ -4,12 +4,12 @@ import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import billin from "../assets/billin.png";
 import Select from 'react-select';
 import { getData } from 'country-list';
-
+import { useNavigate } from 'react-router-dom';
 const BillingPage = () => {
   const [cartItems, setCartItems] = useState([]);
   const [subTotal, setSubTotal] = useState(0);
   const [payPalClientId, setPayPalClientId] = useState('');
-
+const navigate=useNavigate();
   const indianStates = [
     { value: 'AN', label: 'Andaman and Nicobar Islands' },
     { value: 'AP', label: 'Andhra Pradesh' },
@@ -130,15 +130,13 @@ const BillingPage = () => {
 
   const handleApprove = async (orderId) => {
     try {
-     
       const billingDetails = {
         ...formData,
         country: selectedCountry?.label || '',
         state: selectedState?.label || '',
         city: selectedState?.value === 'OTHER' ? cityName : formData.city
       };
-      console.log("Billing Details:", billingDetails); // Debugging statement
-
+  
       const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/v1/product/pay`, {
         orderId,
         userId,
@@ -146,13 +144,23 @@ const BillingPage = () => {
         items: cartItems,
         billingDetails
       });
-
+  
       console.log('Payment Successful:', response.data);
+  
+      // Call API to delete products from cart
+      await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/v1/product/deleteCartProducts`, { userId });
+   navigate(`/orderCompleted/${orderId}`)
+      console.log('Cart items deleted successfully');
+      // Optionally, update the UI to reflect the empty cart
+      setCartItems([]);
+      setSubTotal(0);
+  
       // Handle post-payment actions like updating the database, showing a confirmation message, etc.
     } catch (error) {
       console.error('Error processing payment:', error);
     }
   };
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();

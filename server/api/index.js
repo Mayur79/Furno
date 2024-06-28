@@ -1,5 +1,4 @@
 const express = require("express");
-const { response } = express;
 const dotenv = require("dotenv");
 const connectDB = require("../database/db.js");
 const cors = require("cors");

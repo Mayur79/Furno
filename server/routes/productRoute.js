@@ -6,6 +6,7 @@ const {
   getProductCartController,
   deleteProductCartController,
   createOrderInDatabase,
+  getOrderDetails,
 } = require("../controller/adminController");
 const multer = require("multer");
 const router = require("express").Router();
@@ -13,6 +14,7 @@ const fs = require("fs");
 const path = require("path");
 const memoryStorage = require("multer");
 const billingDetail = require("../model/billingDetail");
+const cartModel = require("../model/cartModel");
 
 // Ensure the uploads directory exists
 // Configure multer to handle file uploads
@@ -22,6 +24,7 @@ router.post("/createProduct", createProductController);
 
 router.get("/getProducts", getProductsController);
 router.get("/getSpecificProduct/:productId", getSpecificProductController);
+router.get("/getOrderDetails/:orderId", getOrderDetails);
 router.post("/addtoCart", addProductCartController);
 router.get("/displayCartProduct", getProductCartController);
 router.delete("/deleteCartProduct", deleteProductCartController);
@@ -31,8 +34,7 @@ router.get("/paypal", (req, res) => {
 });
 
 router.post("/pay", async (req, res) => {
-  const { orderId, userId, amount, items, billingDetails } = req.body;
-  console.log("req body", req.body);
+  const { orderId, userId, amount, items } = req.body;
   try {
     // Process the payment and create the order in your database
     // Assuming you have a function to create an order
@@ -69,6 +71,25 @@ router.post("/submitBillingDetails", async (req, res) => {
     res.status(200).send({ msg: "data saved successfully" });
   } catch (error) {
     res.status(500).send(error);
+  }
+});
+
+const deleteCartItemsByUserId = async (userId) => {
+  // Your logic to delete cart items by user ID
+  // For example, if using MongoDB and Mongoose:
+  await cartModel.deleteMany({ userId });
+};
+
+router.post("/deleteCartProducts", async (req, res) => {
+  const { userId } = req.body;
+  try {
+    // Assuming you have a function to delete cart items by user ID
+    await deleteCartItemsByUserId(userId);
+
+    res.json({ message: "Cart items deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting cart items:", error);
+    res.status(500).json({ message: "Error deleting cart items" });
   }
 });
 

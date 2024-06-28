@@ -50,6 +50,16 @@ const getSpecificProductController = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+const getOrderDetails = async (req, res) => {
+  try {
+    const { orderId } = req.params;
+    const orderDetail = await Order.findOne({ orderId: orderId });
+    res.status(200).json(orderDetail);
+  } catch (error) {
+    console.error("Error fetching products:", error);
+    res.status(500).json({ error: error.message });
+  }
+};
 const addProductCartController = async (req, res) => {
   const { products, userId } = req.body;
   console.log("req body cart", req.body);
@@ -138,4 +148,5 @@ module.exports = {
   getProductCartController,
   deleteProductCartController,
   createOrderInDatabase,
+  getOrderDetails,
 };

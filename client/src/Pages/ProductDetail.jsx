@@ -20,8 +20,7 @@ const ProductDetail = () => {
       try {
         const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/v1/product/getSpecificProduct/${productId}`);
         setProduct(response.data);
-        console.log("Auth ",auth);
-        console.log("USrri ",userId)
+   
       } catch (error) {
         console.error('Error fetching product:', error);
       }
