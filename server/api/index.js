@@ -13,6 +13,7 @@ app.use(
     origin: "https://furnowebsite.vercel.app", // Replace with your frontend origin
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     credentials: true,
+    headers: ["Content-Type", "Authorization"],
   })
 );
 
