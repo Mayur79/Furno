@@ -10,13 +10,13 @@ const bodyParser = require("body-parser");
 dotenv.config();
 app.use(
   cors({
-    origin: "https://furnowebsite.vercel.app", // Replace with your frontend origin
+    origin: process.env.frontend_url, // Replace with your frontend origin
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     credentials: true,
     headers: ["Content-Type", "Authorization"],
   })
 );
-
+app.use(cors());
 // Middleware to handle large payloads
 app.use(bodyParser.json({ limit: "50mb" }));
 app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));

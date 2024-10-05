@@ -50,7 +50,7 @@ const Modal = ({ type, onClose, onSwitch }) => {
         const res = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/v1/auth/signup`, { name, email, password, confirmPassword });
         if (res && res.data.success) {
           onClose();
-            navigate("/about");
+          window.location.reload();
         } else {
             console.log(res.data.message);
         }
@@ -106,7 +106,6 @@ useEffect(() => {
           .then((res) => {
               axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/v1/auth/storeUserData`, { profile: res.data }).then((response) => {
                   console.log('User data stored successfully:', response.data);
-                  navigate('/about');
                   window.location.reload();
               });
           })
@@ -138,16 +137,8 @@ const handleLogin = async (e) => {
                 logIn(res.data, token);
                 localStorage.setItem('auth', JSON.stringify(res.data));
 
-          const endTime = new Date(); // Record end time
-          const timeTaken = (endTime - startTime) / 1000; // Calculate time taken in seconds
-
-          // Display success toast with time taken
-          toast.success(`Login successful. Redirecting in ${timeTaken} seconds`, {
-            onClose: () => {
-                // Reload the page after displaying the toast
+                
                 window.location.reload();
-            },
-        });
       } else {
           toast.error(res.data.message);
       }
