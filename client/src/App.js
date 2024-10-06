@@ -11,6 +11,7 @@ import ProductDetail from "./Pages/ProductDetail";
 import CartPage from "./Pages/CartPage";
 import BillingPage from "./Pages/BillingPage";
 import OrderCompletedPage from "./Pages/OrderCompletedPage";
+import ContactUsPage from "./Pages/ContactUsPage";
 
 function App() {
   const { isLoggedIn, profile, logOut, isAdmin } = useAuth();
@@ -32,6 +33,7 @@ function App() {
             path="/orderCompleted/:orderId"
             element={<OrderCompletedPage />}
           />
+          <Route path="/contact" element={<ContactUsPage />} />
         </Route>
       </Routes>
     </div>

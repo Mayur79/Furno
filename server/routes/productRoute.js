@@ -15,6 +15,7 @@ const path = require("path");
 const memoryStorage = require("multer");
 const billingDetail = require("../model/billingDetail");
 const cartModel = require("../model/cartModel");
+const contactUs = require("../model/contactUs");
 
 // Ensure the uploads directory exists
 // Configure multer to handle file uploads
@@ -93,4 +94,19 @@ router.post("/deleteCartProducts", async (req, res) => {
   }
 });
 
+router.post("/contactUsForm", async (req, res) => {
+  const { name, email, subject, usermessage, message } = req.body;
+  try {
+    const ContactData = new contactUs({
+      name,
+      email,
+      subject,
+      usermessage: message,
+    });
+    await ContactData.save();
+    res.status(200).send({ msg: "data saved successfully" });
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
 module.exports = router;
